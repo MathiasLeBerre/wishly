@@ -284,37 +284,86 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
   letter-spacing: -0.3px;
 }
 
-/* ── SPLASH / ONBOARDING ── */
+/* ── ONBOARDING ANIMÉ ── */
 #screen-splash {
   background: var(--bg);
+  overflow: hidden;
   display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  text-align: center; padding: 40px 32px;
-  gap: 0;
 }
-.splash-logo {
-  font-family: var(--font-display); font-size: 52px; font-weight: 300;
-  font-style: italic; color: var(--text); letter-spacing: -2px;
-  margin-bottom: 4px; line-height: 1;
+.ob-slides {
+  flex: 1; display: flex; overflow: hidden; position: relative;
 }
-.splash-logo span { color: var(--accent2); }
-.splash-tagline {
-  font-size: 15px; color: var(--text2); margin-bottom: 48px;
-  font-weight: 300; letter-spacing: 0.1px;
+.ob-slide {
+  min-width: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 32px 24px; text-align: center;
+  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
 }
-.splash-features {
-  display: flex; flex-direction: column; gap: 14px;
-  width: 100%; margin-bottom: 40px; text-align: left;
+.ob-visual {
+  width: 200px; height: 200px; margin: 0 auto 32px;
+  position: relative; flex-shrink: 0;
 }
-.splash-feat {
-  display: flex; align-items: center; gap: 14px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 14px 16px;
+.ob-circle {
+  width: 200px; height: 200px; border-radius: 50%;
+  position: absolute; top: 0; left: 0;
 }
-.feat-icon { font-size: 22px; flex-shrink: 0; }
-.feat-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
-.feat-text strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 1px; }
-.splash-cta { width: 100%; }
+.ob-title {
+  font-family: var(--font-display); font-size: 28px; font-weight: 300;
+  font-style: italic; color: var(--text); letter-spacing: -0.5px;
+  line-height: 1.2; margin-bottom: 12px;
+}
+.ob-title span { color: var(--accent2); }
+.ob-sub {
+  font-size: 15px; color: var(--text2); line-height: 1.6;
+  font-weight: 300; max-width: 280px;
+}
+.ob-bottom {
+  padding: 20px 32px calc(32px + var(--safe-bot));
+  flex-shrink: 0;
+}
+.ob-dots {
+  display: flex; justify-content: center; gap: 6px; margin-bottom: 24px;
+}
+.ob-dot {
+  height: 4px; border-radius: 2px; background: var(--border2);
+  transition: all 0.35s ease;
+}
+.ob-dot.active { background: var(--accent2); }
+
+/* Particle floaters */
+.ob-floater {
+  position: absolute; border-radius: 50%;
+  animation: float-around 3s ease-in-out infinite;
+}
+@keyframes float-around {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(8deg); }
+  66% { transform: translateY(6px) rotate(-5deg); }
+}
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.08); opacity: 0.5; }
+}
+@keyframes card-pop {
+  0% { transform: translateY(20px) scale(0.9); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes lock-bounce {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-6px); }
+}
+@keyframes link-slide {
+  0% { transform: translateX(-20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+.ob-slide.animating .card-a { animation: card-pop 0.5s 0.1s ease both; }
+.ob-slide.animating .card-b { animation: card-pop 0.5s 0.25s ease both; }
+.ob-slide.animating .card-c { animation: card-pop 0.5s 0.4s ease both; }
+.ob-slide.animating .lock-icon { animation: lock-bounce 0.8s 0.2s ease both; }
+.ob-slide.animating .link-a { animation: link-slide 0.4s 0.1s ease both; }
+.ob-slide.animating .link-b { animation: link-slide 0.4s 0.25s ease both; }
+.ob-slide.animating .link-c { animation: link-slide 0.4s 0.4s ease both; }
 
 /* ── HOME ── */
 #screen-home .scroll-area { padding-top: 0; }
@@ -583,36 +632,93 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
      SCREEN : SPLASH
 ════════════════════════════════════════════════ -->
 <div class="screen" id="screen-splash">
-  <div class="splash-logo animate-in">Wish<span>ly</span></div>
-  <div class="splash-tagline animate-in delay-1">Des listes cadeaux, sans gâcher la surprise</div>
 
-  <div class="splash-features">
-    <div class="splash-feat animate-in delay-1">
-      <div class="feat-icon">🎁</div>
-      <div class="feat-text">
-        <strong>Crée tes listes par événement</strong>
-        Anniversaire, Noël, mariage… partage un lien à tes proches.
+  <div class="ob-slides" id="ob-slides">
+
+    <!-- Slide 1 : Logo + headline -->
+    <div class="ob-slide" id="ob-slide-0">
+      <div class="ob-visual">
+        <!-- Pulsing ring -->
+        <div class="ob-circle" style="background:rgba(201,169,110,0.06); animation:pulse-ring 2.5s ease-in-out infinite;"></div>
+        <div class="ob-circle" style="width:150px;height:150px;top:25px;left:25px;background:rgba(201,169,110,0.08); animation:pulse-ring 2.5s 0.4s ease-in-out infinite;"></div>
+        <!-- Center logo -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+          <div style="font-size:52px;line-height:1;margin-bottom:6px;">🎁</div>
+        </div>
+        <!-- Floaters -->
+        <div class="ob-floater" style="width:10px;height:10px;background:var(--accent2);opacity:0.5;top:20px;left:30px;animation-delay:0s;animation-duration:2.8s;"></div>
+        <div class="ob-floater" style="width:7px;height:7px;background:var(--green);opacity:0.4;top:140px;left:170px;animation-delay:0.6s;animation-duration:3.2s;"></div>
+        <div class="ob-floater" style="width:8px;height:8px;background:#d0a0c8;opacity:0.4;top:50px;left:160px;animation-delay:1.1s;animation-duration:2.5s;"></div>
+        <div class="ob-floater" style="width:6px;height:6px;background:var(--amber);opacity:0.5;top:160px;left:20px;animation-delay:0.3s;animation-duration:3.5s;"></div>
       </div>
+      <div class="ob-title">Wish<span>ly</span></div>
+      <div class="ob-sub">Des listes de cadeaux pour toutes les occasions, sans jamais gâcher la surprise.</div>
     </div>
-    <div class="splash-feat animate-in delay-2">
-      <div class="feat-icon">🔒</div>
-      <div class="feat-text">
-        <strong>La surprise reste intacte</strong>
-        Tu ne vois pas qui réserve quoi. Tes proches évitent les doublons entre eux.
+
+    <!-- Slide 2 : Listes par event -->
+    <div class="ob-slide" id="ob-slide-1">
+      <div class="ob-visual">
+        <div class="ob-circle" style="background:rgba(201,169,110,0.05);"></div>
+        <!-- Mini list cards -->
+        <div class="card-a" style="position:absolute;top:16px;left:16px;right:16px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;opacity:0;">
+          <span style="font-size:18px">🎂</span>
+          <div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">Mon anniversaire</div>
+            <div style="font-size:10px;color:var(--amber)">8 idées · 3 réservées</div>
+          </div>
+          <div style="margin-left:auto;height:3px;width:40px;background:var(--bg3);border-radius:2px;overflow:hidden;"><div style="height:100%;width:37%;background:var(--accent2);border-radius:2px;"></div></div>
+        </div>
+        <div class="card-b" style="position:absolute;top:78px;left:24px;right:24px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;opacity:0;">
+          <span style="font-size:18px">🎄</span>
+          <div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">Liste de Noël</div>
+            <div style="font-size:10px;color:var(--green)">12 idées · 5 réservées</div>
+          </div>
+          <div style="margin-left:auto;height:3px;width:40px;background:var(--bg3);border-radius:2px;overflow:hidden;"><div style="height:100%;width:42%;background:var(--green);border-radius:2px;"></div></div>
+        </div>
+        <div class="card-c" style="position:absolute;top:140px;left:32px;right:32px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;opacity:0;">
+          <span style="font-size:18px">💍</span>
+          <div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">Notre mariage</div>
+            <div style="font-size:10px;color:#d0a0c8">20 idées · 8 réservées</div>
+          </div>
+          <div style="margin-left:auto;height:3px;width:40px;background:var(--bg3);border-radius:2px;overflow:hidden;"><div style="height:100%;width:40%;background:#d0a0c8;border-radius:2px;"></div></div>
+        </div>
       </div>
+      <div class="ob-title">Une liste<br>pour <span>chaque moment</span></div>
+      <div class="ob-sub">Anniversaire, Noël, mariage, naissance… crée autant de listes que tu veux et partage-les en un lien.</div>
     </div>
-    <div class="splash-feat animate-in delay-3">
-      <div class="feat-icon">🔗</div>
-      <div class="feat-text">
-        <strong>Ajoute par lien produit</strong>
-        Colle une URL Amazon, Fnac, ASOS… les infos sont importées automatiquement.
+
+    <!-- Slide 3 : La surprise -->
+    <div class="ob-slide" id="ob-slide-2">
+      <div class="ob-visual">
+        <div class="ob-circle" style="background:rgba(111,207,138,0.06); animation:pulse-ring 2.5s ease-in-out infinite;"></div>
+        <!-- Lock icon -->
+        <div class="lock-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-size:56px;opacity:0;">🔒</div>
+        <!-- Status badges -->
+        <div class="link-a" style="position:absolute;bottom:30px;left:10px;background:var(--green-bg);border:1px solid rgba(111,207,138,0.25);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--green);font-weight:500;opacity:0;">✓ Réservé</div>
+        <div class="link-b" style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--accent2);font-weight:500;white-space:nowrap;opacity:0;">Tu offres ça 🎁</div>
+        <div class="link-c" style="position:absolute;bottom:30px;right:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--text3);font-weight:500;opacity:0;">Dispo</div>
       </div>
+      <div class="ob-title">La surprise<br>reste <span>intacte</span></div>
+      <div class="ob-sub">Tu ne vois jamais qui réserve quoi. Tes proches voient entre eux ce qui est déjà pris — zéro doublon.</div>
+    </div>
+
+  </div>
+
+  <!-- Dots + CTA -->
+  <div class="ob-bottom">
+    <div class="ob-dots">
+      <div class="ob-dot active" style="width:20px;" id="dot-0"></div>
+      <div class="ob-dot" style="width:8px;" id="dot-1"></div>
+      <div class="ob-dot" style="width:8px;" id="dot-2"></div>
+    </div>
+    <button class="btn-primary" id="ob-btn" onclick="obNext()">Suivant →</button>
+    <div style="text-align:center;margin-top:14px;">
+      <span style="font-size:13px;color:var(--text3);cursor:pointer;" onclick="enterApp()">Passer</span>
     </div>
   </div>
 
-  <div class="splash-cta animate-in delay-4">
-    <button class="btn-primary" onclick="enterApp()">Commencer →</button>
-  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════
@@ -681,7 +787,7 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
     <div class="back-btn" onclick="goBack('screen-home')">←</div>
     <h1 id="detail-title" style="font-size:18px">Ma liste</h1>
     <div class="icon-btn-sm" onclick="openCustomizeModal()">✏️</div>
-    <div class="icon-btn-sm" onclick="showScreen('screen-share')">↗</div>
+    <div class="icon-btn-sm" onclick="openShareScreen()">↗</div>
   </div>
 
   <div class="scroll-area">
@@ -711,7 +817,7 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
       <div class="fab-circle">+</div>
       <div class="nav-label">Cadeau</div>
     </div>
-    <div class="nav-item" onclick="showScreen('screen-share')">
+    <div class="nav-item" onclick="openShareScreen()">
       <div class="nav-icon">↗</div>
       <div class="nav-label">Partager</div>
     </div>
@@ -861,17 +967,18 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
     <h1 style="font-size:18px">Partager la liste</h1>
   </div>
   <div class="scroll-area" style="padding: 20px;">
+
     <div style="margin-bottom:20px">
-      <div class="input-label">Lien de ta liste</div>
+      <div class="input-label">Lien à envoyer à tes proches</div>
       <div class="link-box">
-        <span id="share-url">wishly.app/l/mathias-anniversaire</span>
+        <span id="share-url" style="font-size:11px">...</span>
         <button class="copy-btn" onclick="copyLink()">Copier</button>
       </div>
     </div>
 
     <div class="input-label" style="margin-bottom:12px">Partager via</div>
 
-    <div class="share-card" onclick="showToast('Lien copié pour WhatsApp !')">
+    <div class="share-card" id="share-whatsapp">
       <div class="share-icon" style="background:rgba(37,211,102,0.12)">💬</div>
       <div class="share-info">
         <div class="stitle">WhatsApp</div>
@@ -880,7 +987,7 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
       <div style="color:var(--text3); font-size:18px">›</div>
     </div>
 
-    <div class="share-card" onclick="showToast('Lien copié pour les SMS !')">
+    <div class="share-card" id="share-sms">
       <div class="share-icon" style="background:rgba(100,160,240,0.12)">📱</div>
       <div class="share-info">
         <div class="stitle">SMS / iMessage</div>
@@ -889,7 +996,7 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
       <div style="color:var(--text3); font-size:18px">›</div>
     </div>
 
-    <div class="share-card" onclick="showToast('Lien copié !')">
+    <div class="share-card" onclick="copyLink()">
       <div class="share-icon" style="background:var(--bg3)">🔗</div>
       <div class="share-info">
         <div class="stitle">Copier le lien</div>
@@ -902,6 +1009,29 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
       <div style="font-size:12px; color:var(--text3); line-height:1.6;">
         🔒 <strong style="color:var(--text2)">Mode surprise actif</strong> — tes proches voient les cadeaux déjà réservés entre eux, mais toi tu ne vois pas qui réserve quoi.
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCREEN : VUE PROCHE (lien partagé)
+════════════════════════════════════════════════ -->
+<div class="screen" id="screen-guest">
+  <div class="top-bar">
+    <h1 id="guest-title" style="font-size:18px">Liste de cadeaux</h1>
+  </div>
+  <div class="scroll-area">
+    <div id="guest-header" style="padding:20px; border-bottom:1px solid var(--border);"></div>
+    <div style="padding:12px 20px; border-bottom:1px solid var(--border);">
+      <div style="background:rgba(111,207,138,0.08); border:1px solid rgba(111,207,138,0.2); border-radius:var(--radius-sm); padding:11px 14px; font-size:12px; color:var(--green); line-height:1.5; display:flex; gap:8px;">
+        <span>👀</span>
+        <span>Tu vois les cadeaux déjà réservés par d'autres — mais pas par qui. Réserve ce que tu veux offrir !</span>
+      </div>
+    </div>
+    <div id="guest-gifts"></div>
+    <div style="padding:20px; text-align:center;">
+      <div style="font-size:12px; color:var(--text3); margin-bottom:12px;">Tu veux créer ta propre liste ?</div>
+      <button class="btn-secondary" style="width:auto; padding:10px 20px;" onclick="enterApp()">Créer mon Wishly gratuit →</button>
     </div>
   </div>
 </div>
@@ -980,11 +1110,11 @@ textarea { resize: none; height: 72px; line-height: 1.5; }
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="input-group">
           <label class="input-label">Date de l'événement</label>
-          <input type="text" id="new-list-date" placeholder="12 juin 2025">
+          <input type="date" id="new-list-date" style="color-scheme:dark;">
         </div>
         <div class="input-group">
           <label class="input-label">Limite réservation</label>
-          <input type="text" id="new-list-deadline" placeholder="5 juin 2025">
+          <input type="date" id="new-list-deadline" style="color-scheme:dark;">
         </div>
       </div>
       <button class="btn-primary" id="create-s2-btn" disabled onclick="createList()">Créer ma liste ✓</button>
@@ -1148,40 +1278,152 @@ let customizeColor = null;
 let customizeBg = null;
 let fetchTimeout = null;
 
-// ── AI PRODUCT DETECTION via Claude API ──
+// ── SMART URL PRODUCT DETECTION (client-side) ──
 async function detectProductAI(url) {
-  const prompt = `Tu es un assistant qui analyse des URLs de produits e-commerce.
+  const fullUrl = url.startsWith('http') ? url : 'https://' + url;
+  const urlObj = new URL(fullUrl);
+  const hostname = urlObj.hostname.replace('www.', '');
+  const fullPath = (urlObj.pathname + ' ' + urlObj.search).toLowerCase();
 
-URL fournie : ${url}
+  // Detect source
+  const sourceMap = {
+    'fnac.com': 'Fnac', 'fnac.be': 'Fnac',
+    'amazon.fr': 'Amazon', 'amazon.com': 'Amazon', 'amzn.to': 'Amazon',
+    'asos.com': 'ASOS', 'zalando.fr': 'Zalando', 'zalando.be': 'Zalando',
+    'sephora.fr': 'Sephora', 'sephora.com': 'Sephora',
+    'zara.com': 'Zara', 'hm.com': 'H&M',
+    'apple.com': 'Apple', 'darty.com': 'Darty',
+    'boulanger.com': 'Boulanger', 'ldlc.com': 'LDLC',
+    'cultura.com': 'Cultura', 'cdiscount.com': 'Cdiscount',
+    'leboncoin.fr': 'Leboncoin', 'vinted.fr': 'Vinted',
+    'etsy.com': 'Etsy', 'ikea.com': 'IKEA',
+    'decathlon.fr': 'Decathlon', 'adidas.fr': 'Adidas', 'nike.com': 'Nike',
+  };
+  let source = 'Boutique en ligne';
+  for (const [domain, name] of Object.entries(sourceMap)) {
+    if (hostname.includes(domain)) { source = name; break; }
+  }
 
-À partir de cette URL uniquement (domaine + slug), extrais les informations produit.
-Le slug contient souvent le nom du produit en clair (ex: "Michael-Jackson-Xscape-Vinyle-album" → vinyle de Michael Jackson, album Xscape).
+  // Extract product name from slug
+  // Take the longest path segment that looks like a product name
+  const segments = urlObj.pathname.split('/').filter(s => s.length > 3);
+  let slug = '';
+  for (const seg of segments.reverse()) {
+    // Skip ID-only segments like "a7251737"
+    if (/^[a-z]?\d+$/.test(seg)) continue;
+    slug = seg; break;
+  }
+  // Also try query params like ?q=, ?search=
+  const qParam = urlObj.searchParams.get('q') || urlObj.searchParams.get('search') || urlObj.searchParams.get('keyword') || '';
+  if (qParam.length > slug.length) slug = qParam;
 
-Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans explication :
-{
-  "name": "nom complet du produit, lisible et propre",
-  "price": "prix estimé en chiffres uniquement (ex: 25), ou null si inconnu",
-  "emoji": "un seul emoji qui représente le produit",
-  "brand": "marque ou artiste si identifiable, sinon chaîne vide",
-  "source": "nom du site marchand (ex: Fnac, Amazon, ASOS...)",
-  "category": "catégorie courte (ex: Musique, Électronique, Mode, Livre, Jeu vidéo...)"
-}`;
+  // Clean slug: remove file extensions, IDs at end, replace separators
+  slug = slug
+    .replace(/\.(html?|php|aspx?)$/i, '')
+    .replace(/[-_+]/g, ' ')
+    .replace(/%20/g, ' ')
+    .replace(/\b\d{5,}\b/g, '') // remove long numbers
+    .replace(/\s+/g, ' ')
+    .trim();
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      messages: [{ role: 'user', content: prompt }]
-    })
+  // Capitalize properly
+  const name = slug.split(' ')
+    .filter(w => w.length > 0)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ') || source + ' — produit';
+
+  // Detect category + emoji from keywords in full URL
+  const categories = [
+    { kw: ['vinyle','vinyl','lp','album','cd','musique','music','mp3'], emoji:'🎵', cat:'Musique', price:'25' },
+    { kw: ['casque','headphone','ecouteur','airpod','audio'], emoji:'🎧', cat:'Audio', price:'150' },
+    { kw: ['iphone','samsung','smartphone','telephone','mobile'], emoji:'📱', cat:'Smartphone', price:'699' },
+    { kw: ['ipad','tablette','tablet'], emoji:'📱', cat:'Tablette', price:'449' },
+    { kw: ['macbook','laptop','ordinateur','computer','pc'], emoji:'💻', cat:'Informatique', price:'999' },
+    { kw: ['tv','television','ecran','monitor'], emoji:'📺', cat:'Écran', price:'399' },
+    { kw: ['ps5','playstation','xbox','switch','nintendo','jeu','game','gaming'], emoji:'🎮', cat:'Jeu vidéo', price:'69' },
+    { kw: ['appareil','camera','photo','canon','nikon','sony','fuji'], emoji:'📷', cat:'Photo', price:'499' },
+    { kw: ['livre','book','roman','bd','manga','comics'], emoji:'📚', cat:'Livre', price:'20' },
+    { kw: ['sneaker','basket','chaussure','shoe','nike','adidas','jordan','vans'], emoji:'👟', cat:'Mode', price:'120' },
+    { kw: ['veste','jacket','manteau','coat','pull','hoodie','tshirt','robe','dress','jean'], emoji:'👕', cat:'Mode', price:'60' },
+    { kw: ['sac','bag','backpack','pochette'], emoji:'👜', cat:'Accessoires', price:'80' },
+    { kw: ['parfum','fragrance','cologne','eau de'], emoji:'🌸', cat:'Beauté', price:'80' },
+    { kw: ['creme','serum','maquillage','makeup','palette','lipstick'], emoji:'💄', cat:'Beauté', price:'45' },
+    { kw: ['montre','watch','bracelet','bijou','collier','ring'], emoji:'⌚', cat:'Bijoux', price:'150' },
+    { kw: ['velo','bike','trottinette','sport','fitness','yoga'], emoji:'🚴', cat:'Sport', price:'199' },
+    { kw: ['cuisine','cookeo','airfryer','cafetiere','robot','tefal'], emoji:'🍳', cat:'Cuisine', price:'89' },
+    { kw: ['canape','meuble','lampe','deco','ikea','coussin'], emoji:'🛋️', cat:'Déco', price:'79' },
+    { kw: ['lego','jouet','toy','puzzle'], emoji:'🧸', cat:'Jouet', price:'50' },
+    { kw: ['coffret','box','cadeau','gift','set'], emoji:'🎁', cat:'Coffret', price:'45' },
+  ];
+
+  let emoji = '🛍️', category = 'Produit', price = null;
+  const searchStr = fullPath + ' ' + name.toLowerCase();
+  for (const c of categories) {
+    if (c.kw.some(k => searchStr.includes(k))) {
+      emoji = c.emoji; category = c.cat; price = c.price; break;
+    }
+  }
+
+  // Source-specific price hints
+  if (!price) {
+    const sourcePrices = { 'Fnac':'39','Amazon':'49','ASOS':'59','Sephora':'45','Zara':'49','Apple':'299','Decathlon':'39','IKEA':'29' };
+    price = sourcePrices[source] || null;
+  }
+
+  return { name, price, emoji, brand: '', source, category };
+}
+
+// ── ONBOARDING ──
+let obCurrent = 0;
+const obTotal = 3;
+
+function obGoTo(n) {
+  const slides = document.getElementById('ob-slides');
+  const prev = obCurrent;
+  obCurrent = Math.max(0, Math.min(obTotal - 1, n));
+  // Move all slides
+  document.querySelectorAll('.ob-slide').forEach((s, i) => {
+    s.style.transform = `translateX(${(i - obCurrent) * 100}%)`;
+    s.classList.remove('animating');
   });
+  // Trigger animations on current slide
+  setTimeout(() => {
+    document.getElementById('ob-slide-' + obCurrent)?.classList.add('animating');
+  }, 50);
+  // Update dots
+  for (let i = 0; i < obTotal; i++) {
+    const dot = document.getElementById('dot-' + i);
+    if (dot) {
+      dot.classList.toggle('active', i === obCurrent);
+      dot.style.width = i === obCurrent ? '20px' : '8px';
+    }
+  }
+  // Update button
+  const btn = document.getElementById('ob-btn');
+  if (btn) btn.textContent = obCurrent === obTotal - 1 ? 'Commencer 🎁' : 'Suivant →';
+}
 
-  if (!response.ok) throw new Error('API error');
-  const data = await response.json();
-  const text = data.content?.[0]?.text || '';
-  const clean = text.replace(/```json|```/g, '').trim();
-  return JSON.parse(clean);
+function obNext() {
+  if (obCurrent === obTotal - 1) { enterApp(); return; }
+  obGoTo(obCurrent + 1);
+}
+
+// Init slide positions
+document.querySelectorAll('.ob-slide').forEach((s, i) => {
+  s.style.transform = `translateX(${i * 100}%)`;
+});
+// Animate first slide on load
+setTimeout(() => document.getElementById('ob-slide-0')?.classList.add('animating'), 300);
+
+// Swipe support
+let obTouchX = 0;
+const obEl = document.getElementById('ob-slides');
+if (obEl) {
+  obEl.addEventListener('touchstart', e => { obTouchX = e.touches[0].clientX; }, { passive: true });
+  obEl.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - obTouchX;
+    if (Math.abs(dx) > 50) obGoTo(obCurrent + (dx < 0 ? 1 : -1));
+  }, { passive: true });
 }
 
 // ── SCREEN NAVIGATION ──
@@ -1253,7 +1495,8 @@ function checkCreateS2() {
 
 function createList() {
   const name = document.getElementById('new-list-name').value.trim();
-  const date = document.getElementById('new-list-date').value.trim();
+  const rawDate = document.getElementById('new-list-date').value;
+  const date = rawDate ? new Date(rawDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
   const list = {
     id: Date.now().toString(),
     name, date,
@@ -1610,10 +1853,125 @@ function saveCustomize() {
 }
 
 // ── SHARE ──
+function buildShareUrl(listId) {
+  const base = window.location.href.split('?')[0].split('#')[0];
+  return base + '?liste=' + listId;
+}
+
+function openShareScreen() {
+  const list = lists.find(l => l.id === currentListId);
+  if (!list) return;
+  const url = buildShareUrl(list.id);
+  document.getElementById('share-url').textContent = url;
+  const msg = encodeURIComponent('🎁 Voici ma liste de cadeaux "' + list.name + '" — tu peux voir ce qui est déjà réservé et choisir ce que tu veux m\'offrir !\n\n' + url);
+  document.getElementById('share-whatsapp').onclick = () => { window.open('https://wa.me/?text=' + msg); };
+  document.getElementById('share-sms').onclick = () => { window.open('sms:?body=' + msg); };
+  showScreen('screen-share');
+}
+
 function copyLink() {
-  const url = document.getElementById('share-url').textContent;
-  if (navigator.clipboard) navigator.clipboard.writeText('https://'+url);
+  const list = lists.find(l => l.id === currentListId);
+  const url = list ? buildShareUrl(list.id) : window.location.href;
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
   showToast('✓ Lien copié !');
+}
+
+// ── GUEST VIEW (vue proche via ?liste=ID) ──
+function loadGuestView(listId) {
+  // Try to find list in localStorage of this device
+  const list = lists.find(l => l.id === listId);
+
+  if (!list) {
+    // List not on this device — show demo with friendly message
+    showScreen('screen-guest');
+    document.getElementById('guest-title').textContent = 'Liste de cadeaux';
+    document.getElementById('guest-header').innerHTML = `
+      <div style="text-align:center; padding:20px 0 8px;">
+        <div style="font-size:40px; margin-bottom:12px;">🎁</div>
+        <div style="font-size:16px; font-weight:500; color:var(--text)">Liste introuvable</div>
+        <div style="font-size:13px; color:var(--text3); margin-top:6px; line-height:1.6;">Cette liste n'existe pas encore sur cet appareil.<br>Le créateur doit partager le lien depuis son téléphone.</div>
+      </div>`;
+    document.getElementById('guest-gifts').innerHTML = '';
+    return;
+  }
+
+  currentListId = listId;
+  showScreen('screen-guest');
+
+  const colorMap = { birthday:'rgba(240,192,96,0.12)', noel:'rgba(111,207,138,0.1)', mariage:'rgba(210,160,200,0.12)', naissance:'rgba(100,180,240,0.12)', fete:'rgba(232,213,176,0.08)', autre:'rgba(255,255,255,0.05)' };
+  const textColorMap = { birthday:'var(--amber)', noel:'var(--green)', mariage:'#d0a0c8', naissance:'#80c0f0', fete:'var(--accent)', autre:'var(--text2)' };
+  const bg = list.bg || colorMap[list.type] || 'rgba(232,213,176,0.08)';
+  const tc = list.color || textColorMap[list.type] || 'var(--accent)';
+  const taken = list.gifts.filter(g => g.taken).length;
+  const pct = list.gifts.length ? Math.round(taken / list.gifts.length * 100) : 0;
+
+  document.getElementById('guest-title').textContent = list.name;
+  document.getElementById('guest-header').innerHTML = `
+    <div style="background:${bg}; border-radius:var(--radius-sm); padding:16px; display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+      <span style="font-size:32px">${list.emoji}</span>
+      <div>
+        <div style="font-family:var(--font-display); font-size:20px; font-weight:300; font-style:italic; color:var(--text); letter-spacing:-0.3px;">${list.name}</div>
+        <div style="font-size:12px; color:${tc}; margin-top:3px;">${list.date || ''} · ${list.gifts.length} idée${list.gifts.length !== 1 ? 's' : ''}</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--text3); margin-bottom:6px;">
+      <span>${taken} cadeau${taken !== 1 ? 'x' : ''} réservé${taken !== 1 ? 's' : ''}</span>
+      <span>${pct}% couvert</span>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%; background:${tc}"></div></div>`;
+
+  renderGuestGifts(list);
+}
+
+function renderGuestGifts(list) {
+  const c = document.getElementById('guest-gifts');
+  if (list.gifts.length === 0) {
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">🎀</div><div class="empty-title">Aucun cadeau pour l'instant</div><div class="empty-sub">Le créateur n'a pas encore ajouté d'idées.</div></div>`;
+    return;
+  }
+  c.innerHTML = list.gifts.map((g, i) => {
+    const prioDot = `<div class="prio-dot prio-${g.prio || 'med'}"></div>`;
+    const linkIcon = g.url ? `<a href="${g.url}" target="_blank" style="color:var(--text3);font-size:12px;text-decoration:none;margin-left:4px;">↗</a>` : '';
+    let statusHtml;
+    if (g.takenByGuest) {
+      statusHtml = `<div class="gift-status-badge status-mine" onclick="guestUnreserve(${i})" style="cursor:pointer">Tu offres ça</div>`;
+    } else if (g.taken) {
+      statusHtml = `<div class="gift-status-badge status-taken">Déjà pris</div>`;
+    } else {
+      statusHtml = `<div class="gift-status-badge status-free" onclick="guestReserve(${i})" style="cursor:pointer">Réserver</div>`;
+    }
+    return `<div class="gift-row">
+      <div class="gift-thumb">${g.emoji || '🎁'}</div>
+      <div class="gift-info">
+        <div class="gift-name">${g.name}${linkIcon}</div>
+        <div class="gift-price">${g.price ? g.price + ' €' : '—'}${g.note ? ' · ' + g.note : ''}</div>
+      </div>
+      ${prioDot}
+      ${statusHtml}
+    </div>`;
+  }).join('');
+}
+
+function guestReserve(i) {
+  const list = lists.find(l => l.id === currentListId);
+  if (!list) return;
+  list.gifts[i].taken = true;
+  list.gifts[i].takenByGuest = true;
+  save();
+  renderGuestGifts(list);
+  // Update header stats
+  loadGuestView(currentListId);
+  showToast('✓ Cadeau réservé ! 🎉');
+}
+
+function guestUnreserve(i) {
+  const list = lists.find(l => l.id === currentListId);
+  if (!list) return;
+  list.gifts[i].taken = false;
+  list.gifts[i].takenByGuest = false;
+  save();
+  loadGuestView(currentListId);
+  showToast('Réservation annulée');
 }
 
 // ── FRIEND LIST ──
@@ -1622,6 +1980,13 @@ function openFriendList() { showScreen('screen-friend-list'); }
 // ── INIT ──
 save();
 renderHomeLists();
+
+// Check for shared list URL param
+const urlParams = new URLSearchParams(window.location.search);
+const sharedListId = urlParams.get('liste');
+if (sharedListId) {
+  loadGuestView(sharedListId);
+}
 </script>
 </body>
 </html>
